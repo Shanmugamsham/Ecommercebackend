@@ -1,4 +1,4 @@
-const sendtoken=async(user,statecode,res)=>{
+const sendtoken=async(user,statecode,res,message)=>{
    try {
     const token= await  user.getJWTtoken()
      
@@ -11,6 +11,7 @@ const sendtoken=async(user,statecode,res)=>{
 
     return res.status(statecode).cookie('token', token, options).json({
         sucess:true,
+        message:message,
         data:user,
         })
    } catch (error) {

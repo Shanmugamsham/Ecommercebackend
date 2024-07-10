@@ -16,13 +16,14 @@ exports.registerUser=async(req,res,next)=>{
         avatar,
         role 
     });
-    sendtoken(user,200,res)
+    let message="registeruser successfully"
+    sendtoken(user,200,res,message)
         
     } catch (error) {
          
         if(error.name == "ValidationError") {
             message = Object.values(error.errors).map(value => value.message)
-            return res.status(400).json({msg:message})
+            return res.status(400).json({message:message})
         }
 
 
@@ -57,7 +58,8 @@ exports.loginUser=async(req,res,next)=>{
      if(!await user.isValidPassword(password)){
          return  res.status(401).json({msg:"invalid email or password"})
      }
-    sendtoken(user,200,res)
+      let message="login successfully"
+    sendtoken(user,200,res,message)
     } catch (error) {
 
         if(error.name == "ValidationError") {
@@ -84,8 +86,9 @@ exports.logoutuser=async(req,res,next)=>{
     res.cookie("token",null,{
         expires:new Date(Date.now())
     }).json({
-        msg:"logout successfully",
-        success:true
+        success:true,
+        message:"logout successfully",
+       
     })
    } catch (error) {
     if(error.name == "ValidationError") {
@@ -110,7 +113,7 @@ exports.forgotpassword=async(req,res,next)=>{
     const user =  await User.findOne({email: req.body.email});
     try {
         if(!user) {
-            return  res.status(401).json({msg:"user is not found"})
+            return  res.status(401).json({message:"user is not found"})
         }
     
         const resetToken = await user.getResetToken();
@@ -138,12 +141,12 @@ exports.forgotpassword=async(req,res,next)=>{
             user.resetPasswordToken = undefined;
             user.resetPasswordTokenExpire = undefined;
             await user.save({validateBeforeSave:false});
-            return res.status(500).json({msg:error})
+            return res.status(500).json({message:error})
         }
     } catch (error) {
         if(error.name == "ValidationError") {
             message = Object.values(error.errors).map(value => value.message)
-            return res.status(400).json({msg:message})
+            return res.status(400).json({message:message})
         }
         res.status(500).json({
             success: false,
@@ -167,17 +170,18 @@ exports.forgotpassword=async(req,res,next)=>{
     } )
 
     if(!user) {
-        return res.status(400).json({msg:"Password reset token is invalid or expired"})
+        return res.status(400).json({message:"Password reset token is invalid or expired"})
     }
     
     if( req.body.password !== req.body.confirmPassword) {
-        return res.status(400).json({msg:"Password does not match"})
+        return res.status(400).json({message:"Password does not match"})
     }
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpire = undefined;
     await user.save({validateBeforeSave: false})
-    sendtoken(user,200,res)
+    let message="resetpassword successfully"
+    sendtoken(user,200,res,message)
     } catch (error) {
 
         if(error.name == "ValidationError") {
@@ -197,13 +201,14 @@ exports.getUserProfile =async (req, res, next) => {
         const user = await User.findById(req.user.id)
     res.status(200).json({
          success:true,
+         message:"get profile successfully",
          user
     })
     } catch (error) {
 
         if(error.name == "ValidationError") {
             message = Object.values(error.errors).map(value => value.message)
-            return res.status(400).json({msg:message})
+            return res.status(400).json({message:message})
         }
         res.status(500).json({
             success: false,
@@ -220,20 +225,21 @@ exports.changePassword  = async (req, res, next) => {
         //check old password
 
         if(!await user.isValidPassword(req.body.oldPassword)) {
-        return res.status(401).json({msg:'Old password is incorrect'});
+        return res.status(401).json({message:'Old password is incorrect'});
     }
 
     //assigning new password
             user.password = req.body.password;
             await user.save();
             res.status(200).json({
+            message:"changed password successfully",
             success:true,
     })
    } catch (error) {
     
     if(error.name == "ValidationError") {
         message = Object.values(error.errors).map(value => value.message)
-        return res.status(400).json({msg:message})
+        return res.status(400).json({message:message})
     }
     res.status(500).json({
         success: false,
@@ -259,12 +265,13 @@ exports.updateProfile =async (req, res, next) => {
     
         res.status(200).json({
             success: true,
+            message:"product updatedsuccessfully",
             user
         })
     } catch (error) {
         if(error.name == "ValidationError") {
             message = Object.values(error.errors).map(value => value.message)
-            return res.status(400).json({msg:message})
+            return res.status(400).json({message:message})
         }
         res.status(500).json({
             success: false,
@@ -278,12 +285,13 @@ exports.getAllUsers = async (req, res, next) => {
             const users = await User.find();
             res.status(200).json({
                  success: true,
+                 message:"getalluser successfully",
                  users
         })
         } catch (error) {
             if(error.name == "ValidationError") {
                 message = Object.values(error.errors).map(value => value.message)
-                return res.status(400).json({msg:message})
+                return res.status(400).json({message:message})
             }
             res.status(500).json({
                 success: false,
@@ -301,18 +309,19 @@ exports.getAllUsers = async (req, res, next) => {
     if(!user) {
     return res.status(401).json({
         success:false,
-        msg:`User not found with this id ${req.params.id}`
+        message:`User not found with this id ${req.params.id}`
               })
     
             }
     res.status(200).json({
      success: true,
+     message:"getuser successfully",
      user
            })
      } catch (error) {
         if(error.name == "ValidationError") {
             message = Object.values(error.errors).map(value => value.message)
-            return res.status(400).json({msg:message})
+            return res.status(400).json({message:message})
         }
         res.status(500).json({
             success: false,
@@ -336,13 +345,14 @@ exports.getAllUsers = async (req, res, next) => {
         
             res.status(200).json({
                 success: true,
+                message:"updateUser successfully",
                 user
             })
            } catch (error) {
 
             if(error.name == "ValidationError") {
                 message = Object.values(error.errors).map(value => value.message)
-                return res.status(400).json({msg:message})
+                return res.status(400).json({message:message})
             }
             res.status(500).json({
                 success: false,
@@ -355,11 +365,12 @@ exports.getAllUsers = async (req, res, next) => {
             try {
                 const user = await User.findById(req.params.id);
             if(!user) {
-                return res.status(400).json({msg:`User not found with this id ${req.params.id}`}) 
+                return res.status(400).json({mesage:`User not found with this id ${req.params.id}`}) 
             }
             await User.findByIdAndDelete(req.params.id)
             res.status(200).json({
                 success: true,
+                message:"deleteUser successfully"
             })
             } catch (error) {
                 if(error.name == "ValidationError") {
