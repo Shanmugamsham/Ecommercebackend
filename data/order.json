@@ -1,0 +1,26 @@
+{
+    "orderItems":[
+    {
+    "product":"66841301362b4dc6429588b0",
+    "name": "iPJone",
+    "price": 220,
+    "image": "/images/products/2.jpg",
+    "quantity":1
+    }
+    ],
+    "itemsPrice":2.75,
+    "taxPrice":0.14,
+    "shippingPrice":25,
+    "totalPrice":469.07,
+    "shippingInfo":{
+        "address":"345 main road",
+        "city":"chennai",
+        "country":"india",
+        "postalCode":"642203",
+        "phoneNo":"9952524730"
+    },
+    "paymentInfo":{
+        "id":"sdsdsdseweerrw",
+        "status":"success"
+    }
+    }
