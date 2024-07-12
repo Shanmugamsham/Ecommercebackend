@@ -11,7 +11,7 @@
     const resultperpage=2
     const apifeatures=new Apifeature(productdata.find(),req.query).search().filter().paginate(resultperpage)
       const product=await apifeatures.query;
-      return res.status(200).json({date:product,messege:"successfully" ,success:true})
+      return res.status(200).json({product,messege:"products get successfully" ,success:true})
 
   } catch (error) {
 
